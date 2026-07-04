@@ -1,4 +1,4 @@
-from flask import Flask, jsonify,render_template
+from flask import Flask, jsonify,render_template,request
 
 app= Flask(__name__)
 
@@ -35,7 +35,13 @@ claims_data = [
 
 @app.route("/claims",methods=["GET"])
 def get_claims():
-    return jsonify(claims_data)
+    patient_filter= request.args.get("patient_id")
+    if patient_filter:
+        filtered_claims = [claim for claim in claims_data if str(claim["patient_id"]) == patient_filter]
+    else:
+        filtered_claims = claims_data
+
+    return jsonify(filtered_claims)
 
 @app.route("/")
 def home():
